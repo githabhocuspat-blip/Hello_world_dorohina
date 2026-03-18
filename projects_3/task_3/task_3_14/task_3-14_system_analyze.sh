@@ -1,10 +1,9 @@
 #!/bin/bash
-echo "=== Названия товаров ==="
-awk '{print $2}' data.csv
+df -h | awk 'NR>1 {print $1, $5}'
 echo ""
-echo "=== Товары дороже 20 ==="
-awk '$3 > 20 {print $1, $2, $3}' data.csv
-echo ""
-echo "=== Общая стоимость ==="
-TOTAL=$(awk '{sum += $3} END {print sum}' data.csv)
-echo "Сумма всех товаров: $TOTAL"
+df -h | awk 'NR>1 {
+    gsub(/%/, "", $5)
+    if ($5 > 90) {
+        print "ВНИМАНИЕ! Диск " $1 " заполнен на " $5 "%"
+    }
+}'
